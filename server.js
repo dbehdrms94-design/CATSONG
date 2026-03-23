@@ -8,11 +8,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve static files from root since we moved them out of /public
+app.use(express.static(__dirname));
 
 // Routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Inquiry API Route
@@ -20,7 +22,6 @@ app.post('/api/inquiry', (req, res) => {
   try {
     const { name, contact, serviceType, message } = req.body;
 
-    // Log the inquiry to console (In production, you might send an email or save to DB)
     console.log('--- New Creative Inquiry ---');
     console.log('Name:', name);
     console.log('Contact:', contact);
@@ -37,47 +38,6 @@ app.post('/api/inquiry', (req, res) => {
   } catch (error) {
     console.error('Inquiry Error:', error);
     res.status(500).json({ success: false, error: 'Internal server error' });
-  }
-});
-
-// AI Content Generation Preview API
-app.post('/api/generate-content', async (req, res) => {
-  try {
-    const { contentType, prompt } = req.body;
-    
-    if (!prompt) {
-      return res.status(400).json({ success: false, error: 'Prompt is required' });
-    }
-
-    console.log(`Generating preview for ${contentType}: "${prompt}"`);
-
-    // Simulate AI processing time
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // In a real app, you'd call Gemini API here.
-    // For now, we return a mock response with a placeholder or simulated result.
-    let previewUrl = '';
-    let previewType = contentType;
-
-    if (contentType === 'image') {
-      previewUrl = `https://via.placeholder.com/800x600/667eea/ffffff?text=AI+Generated+Image+for:+${encodeURIComponent(prompt.substring(0, 20))}...`;
-    } else if (contentType === 'video') {
-      previewUrl = 'video-placeholder';
-    } else {
-      previewUrl = 'model-placeholder';
-    }
-
-    res.json({
-      success: true,
-      contentType,
-      prompt,
-      previewUrl,
-      timestamp: new Date().toISOString()
-    });
-
-  } catch (error) {
-    console.error('Generation Error:', error);
-    res.status(500).json({ success: false, error: 'AI generation failed' });
   }
 });
 
@@ -98,5 +58,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 CatSong AI Studio Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 CatSong AI Creator Portfolio Server is running on http://localhost:${PORT}`);
 });
