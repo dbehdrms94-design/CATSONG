@@ -1,8 +1,11 @@
 {
   "name": "catsong-ai-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI-powered image, model, and video generation platform using Google Gemini",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"

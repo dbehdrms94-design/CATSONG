@@ -15,6 +15,7 @@
         <li><a href="#home">홈</a></li>
         <li><a href="#services">서비스</a></li>
         <li><a href="#portfolio">포트폴리오</a></li>
+        <li><a href="#ai-generator">AI 체험</a></li>
         <li><a href="#inquiry">제작 문의</a></li>
       </ul>
     </div>
@@ -55,32 +56,81 @@
   <section id="portfolio" class="portfolio">
     <h2>포트폴리오</h2>
     <div class="portfolio-grid">
-      <div class="portfolio-item">
+      <div class="portfolio-item" data-type="video" data-title="Project: Neon Future" data-desc="AI 영상 기술을 활용한 사이버펑크 스타일 광고">
         <div class="portfolio-content">
           <div class="portfolio-placeholder">🎬 브랜드 홍보 영상</div>
           <h4>Project: Neon Future</h4>
           <p>AI 영상 기술을 활용한 사이버펑크 스타일 광고</p>
+          <button class="preview-btn" onclick="openPreview(this)">미리보기</button>
         </div>
       </div>
-      <div class="portfolio-item">
+      <div class="portfolio-item" data-type="image" data-title="Project: Nature Harmony" data-desc="초현실주의 기법의 환경 보호 캠페인 이미지">
         <div class="portfolio-content">
           <div class="portfolio-placeholder">🖼️ 아트 이미지</div>
           <h4>Project: Nature Harmony</h4>
           <p>초현실주의 기법의 환경 보호 캠페인 이미지</p>
+          <button class="preview-btn" onclick="openPreview(this)">미리보기</button>
         </div>
       </div>
-      <div class="portfolio-item">
+      <div class="portfolio-item" data-type="design" data-title="Project: Tech Logics" data-desc="미래지향적인 기업 로고 및 아이덴티티 구축">
         <div class="portfolio-content">
           <div class="portfolio-placeholder">🤖 브랜드 디자인</div>
           <h4>Project: Tech Logics</h4>
           <p>미래지향적인 기업 로고 및 아이덴티티 구축</p>
+          <button class="preview-btn" onclick="openPreview(this)">미리보기</button>
         </div>
       </div>
-      <div class="portfolio-item">
+      <div class="portfolio-item" data-type="art" data-title="Project: Dreamscape" data-desc="상상력을 현실로 만드는 독창적인 AI 아트웍">
         <div class="portfolio-content">
           <div class="portfolio-placeholder">✨ 크리에이티브 아트</div>
           <h4>Project: Dreamscape</h4>
           <p>상상력을 현실로 만드는 독창적인 AI 아트웍</p>
+          <button class="preview-btn" onclick="openPreview(this)">미리보기</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview Modal -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closePreview()">&times;</span>
+      <div id="previewContent" class="preview-display">
+        <!-- Content will be injected here -->
+      </div>
+      <div class="preview-info">
+        <h3 id="previewTitle"></h3>
+        <p id="previewDescription"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Generation Preview Section -->
+  <section id="ai-generator" class="ai-generator">
+    <h2>AI 콘텐츠 체험하기 (Beta)</h2>
+    <p class="section-subtitle">프롬프트를 입력하여 CatSong AI의 성능을 미리 확인해보세요.</p>
+    <div class="generator-container">
+      <div class="generator-controls">
+        <div class="form-group">
+          <label for="previewPrompt">콘텐츠 설명 (Prompt)</label>
+          <textarea id="previewPrompt" rows="3" placeholder="예: 네온 사인이 반짝이는 미래 도시의 고양이"></textarea>
+        </div>
+        <div class="generator-options">
+          <button class="option-btn active" data-type="image">이미지</button>
+          <button class="option-btn" data-type="video">영상</button>
+          <button class="option-btn" data-type="model">모델링</button>
+        </div>
+        <button id="generateBtn" class="generate-button">생성 미리보기</button>
+      </div>
+      <div class="generator-preview">
+        <div id="aiPreviewArea" class="preview-area">
+          <div class="empty-preview">
+            <span>✨ 생성된 콘텐츠가 여기에 표시됩니다.</span>
+          </div>
+        </div>
+        <div id="previewLoader" class="loader-overlay" style="display:none;">
+          <div class="loader"></div>
+          <p>AI가 콘텐츠를 생성 중입니다...</p>
         </div>
       </div>
     </div>

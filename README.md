@@ -8,38 +8,28 @@ AI를 활용하여 이미지, 모델, 동영상을 생성하고 홍보하는 웹
 - 🤖 **AI 모델** - 다양한 AI 모델을 활용한 스마트 분석
 - 🎬 **동영상 생성** - AI로 전문적인 동영상 콘텐츠 제작
 
-## 🚀 빠른 시작
+## ☁️ Cloudflare Pages 배포 (Full-stack)
 
-### 필수 요구사항
-- Node.js (v14 이상)
-- npm 또는 yarn
-- Google Gemini API 키
+이 프로젝트는 Cloudflare Pages를 통해 정적 파일과 API(Functions)를 모두 배포할 수 있도록 구성되어 있습니다.
 
-### 설치
+### 배포 방법
 
-1. 프로젝트 폴더로 이동
-```bash
-cd catsong
-```
+1.  **Cloudflare Pages 연결:**
+    *   Cloudflare 대시보드에서 **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**을 선택합니다.
+    *   GitHub 저장소를 연결합니다.
 
-2. 의존성 설치
-```bash
-npm install
-```
+2.  **빌드 설정:**
+    *   **Framework preset:** None (또는 빈 값)
+    *   **Build command:** (비워둠)
+    *   **Build output directory:** `public`
 
-3. `.env` 파일 설정
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-PORT=3000
-NODE_ENV=development
-```
+3.  **환경 변수 설정:**
+    *   배포 설정의 **Settings** > **Functions** > **Environment variables**에서 `GEMINI_API_KEY`를 추가합니다.
 
-4. 서버 실행
-```bash
-npm start
-```
-
-5. 브라우저에서 `http://localhost:3000` 접속
+4.  **Wrangler로 로컬 테스트:**
+    ```bash
+    npx wrangler pages dev public
+    ```
 
 ## 📁 프로젝트 구조
 

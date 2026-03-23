@@ -40,6 +40,47 @@ app.post('/api/inquiry', (req, res) => {
   }
 });
 
+// AI Content Generation Preview API
+app.post('/api/generate-content', async (req, res) => {
+  try {
+    const { contentType, prompt } = req.body;
+    
+    if (!prompt) {
+      return res.status(400).json({ success: false, error: 'Prompt is required' });
+    }
+
+    console.log(`Generating preview for ${contentType}: "${prompt}"`);
+
+    // Simulate AI processing time
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // In a real app, you'd call Gemini API here.
+    // For now, we return a mock response with a placeholder or simulated result.
+    let previewUrl = '';
+    let previewType = contentType;
+
+    if (contentType === 'image') {
+      previewUrl = `https://via.placeholder.com/800x600/667eea/ffffff?text=AI+Generated+Image+for:+${encodeURIComponent(prompt.substring(0, 20))}...`;
+    } else if (contentType === 'video') {
+      previewUrl = 'video-placeholder';
+    } else {
+      previewUrl = 'model-placeholder';
+    }
+
+    res.json({
+      success: true,
+      contentType,
+      prompt,
+      previewUrl,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Generation Error:', error);
+    res.status(500).json({ success: false, error: 'AI generation failed' });
+  }
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running', mode: 'Creative Studio' });
