@@ -1,7 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs').promises;
 const dotenv = require('dotenv');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Load environment variables
@@ -9,6 +12,9 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'catsong-secret';
+const ADMIN_DATA_FILE = path.join(__dirname, 'data', 'admins.json');
+const INQUIRY_DATA_FILE = path.join(__dirname, 'data', 'inquiries.json');
 
 // Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -17,10 +23,134 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 app.use(cors());
 app.use(express.json());
 
+// Persisting admin and inquiry records in filesystem for demo purposes
+async function ensureDataFile(filePath, initialData = '[]') {
+  try {
+    await fs.access(filePath);
+  } catch {
+    await fs.mkdir(path.dirname(filePath), { recursive: true });
+    await fs.writeFile(filePath, initialData, 'utf-8');
+  }
+}
+
+async function loadData(filePath) {
+  await ensureDataFile(filePath);
+  const raw = await fs.readFile(filePath, 'utf-8');
+  return JSON.parse(raw || '[]');
+}
+
+async function saveData(filePath, data) {
+  await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+}
+
+function authenticateAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, error: 'Unauthorized' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.admin = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ success: false, error: 'Invalid token' });
+  }
+}
+
 // Serve static files from /public
 app.use(express.static(path.join(__dirname, 'public')));
 
 // --- API Routes ---
+
+// Admin Registration API
+app.post('/api/admin/register', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password || password.length < 6) {
+      return res.status(400).json({ success: false, error: 'Invalid username or password (min 6 chars)' });
+    }
+
+    const admins = await loadData(ADMIN_DATA_FILE);
+    const existing = admins.find(a => a.username === username);
+    if (existing) {
+      return res.status(409).json({ success: false, error: '관리자 아이디가 이미 존재합니다.' });
+    }
+
+    const hash = await bcrypt.hash(password, 10);
+    const newAdmin = {
+      id: Date.now().toString(),
+      username,
+      passwordHash: hash,
+      createdAt: new Date().toISOString()
+    };
+
+    admins.push(newAdmin);
+    await saveData(ADMIN_DATA_FILE, admins);
+
+    res.json({ success: true, message: '관리자 계정이 생성되었습니다.' });
+  } catch (error) {
+    console.error('Admin Register Error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+// Admin Login API
+app.post('/api/admin/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ success: false, error: 'Invalid credentials' });
+    }
+
+    const admins = await loadData(ADMIN_DATA_FILE);
+    const admin = admins.find(a => a.username === username);
+    if (!admin) {
+      return res.status(401).json({ success: false, error: 'Invalid username or password' });
+    }
+
+    const ok = await bcrypt.compare(password, admin.passwordHash);
+    if (!ok) {
+      return res.status(401).json({ success: false, error: 'Invalid username or password' });
+    }
+
+    const token = jwt.sign({ id: admin.id, username: admin.username }, JWT_SECRET, { expiresIn: '6h' });
+    res.json({ success: true, token, username: admin.username });
+  } catch (error) {
+    console.error('Admin Login Error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+// Admin Dashboard API
+app.get('/api/admin/stats', authenticateAdmin, async (req, res) => {
+  try {
+    const admins = await loadData(ADMIN_DATA_FILE);
+    const inquiries = await loadData(INQUIRY_DATA_FILE);
+    res.json({
+      success: true,
+      admin: req.admin.username,
+      adminsCount: admins.length,
+      inquiriesCount: inquiries.length,
+      mode: 'admin'
+    });
+  } catch (error) {
+    console.error('Admin Stats Error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+// Inquiry list for admin
+app.get('/api/admin/inquiries', authenticateAdmin, async (req, res) => {
+  try {
+    const inquiries = await loadData(INQUIRY_DATA_FILE);
+    res.json({ success: true, inquiries });
+  } catch (error) {
+    console.error('Inquiry List Error:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
 
 // AI Content Generation Route (Simulated or Real)
 app.post('/api/generate-content', async (req, res) => {
@@ -66,16 +196,25 @@ app.post('/api/generate-content', async (req, res) => {
 });
 
 // Inquiry API Route
-app.post('/api/inquiry', (req, res) => {
+app.post('/api/inquiry', async (req, res) => {
   try {
     const { name, contact, serviceType, message } = req.body;
 
+    const inquiryRecord = {
+      id: Date.now().toString(),
+      name,
+      contact,
+      serviceType,
+      message,
+      createdAt: new Date().toISOString()
+    };
+
+    const inquiries = await loadData(INQUIRY_DATA_FILE);
+    inquiries.push(inquiryRecord);
+    await saveData(INQUIRY_DATA_FILE, inquiries);
+
     console.log('--- New Creative Inquiry ---');
-    console.log('Name:', name);
-    console.log('Contact:', contact);
-    console.log('Service Type:', serviceType);
-    console.log('Message:', message);
-    console.log('Timestamp:', new Date().toISOString());
+    console.log('Inquiry:', inquiryRecord);
     console.log('----------------------------');
 
     res.json({

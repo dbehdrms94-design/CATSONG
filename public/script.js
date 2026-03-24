@@ -52,6 +52,103 @@ async function handleInquirySubmit(event) {
   }
 }
 
+// Admin APIs
+async function adminRegister(event) {
+  event.preventDefault();
+  const username = document.getElementById('adminRegisterUsername').value.trim();
+  const password = document.getElementById('adminRegisterPassword').value;
+  const message = document.getElementById('adminRegisterMessage');
+
+  try {
+    const response = await fetch('/api/admin/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      message.textContent = '관리자 계정 생성 성공. 로그인하세요.';
+      message.style.color = '#00c000';
+      event.target.reset();
+    } else {
+      message.textContent = result.error || '등록 실패';
+      message.style.color = '#ff4d4d';
+    }
+  } catch (err) {
+    console.error(err);
+    message.textContent = '서버 오류가 발생했습니다.';
+    message.style.color = '#ff4d4d';
+  }
+}
+
+async function adminLogin(event) {
+  event.preventDefault();
+  const username = document.getElementById('adminLoginUsername').value.trim();
+  const password = document.getElementById('adminLoginPassword').value;
+  const message = document.getElementById('adminLoginMessage');
+
+  try {
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      localStorage.setItem('catsongAdminToken', result.token);
+      message.textContent = '로그인 성공!';
+      message.style.color = '#00c000';
+      event.target.reset();
+      loadAdminDashboard();
+    } else {
+      message.textContent = result.error || '로그인 실패';
+      message.style.color = '#ff4d4d';
+    }
+  } catch (err) {
+    console.error(err);
+    message.textContent = '서버 오류가 발생했습니다.';
+    message.style.color = '#ff4d4d';
+  }
+}
+
+async function loadAdminDashboard() {
+  const token = localStorage.getItem('catsongAdminToken');
+  if (!token) {
+    document.getElementById('adminDashboard').style.display = 'none';
+    return;
+  }
+
+  const response = await fetch('/api/admin/stats', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const result = await response.json();
+  if (result.success) {
+    document.getElementById('adminDashboard').style.display = 'block';
+    document.getElementById('adminWelcome').textContent = `환영합니다, ${result.admin}님`;
+    document.getElementById('adminStats').textContent = `등록 관리자: ${result.adminsCount} | 문의 건수: ${result.inquiriesCount}`;
+  } else {
+    document.getElementById('adminDashboard').style.display = 'none';
+    localStorage.removeItem('catsongAdminToken');
+  }
+}
+
+async function loadInquiries() {
+  const token = localStorage.getItem('catsongAdminToken');
+  if (!token) return;
+
+  const response = await fetch('/api/admin/inquiries', {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const result = await response.json();
+  if (result.success) {
+    document.getElementById('adminInquiries').textContent = JSON.stringify(result.inquiries, null, 2);
+  }
+}
+
 // Preview Modal Functions
 async function openPreview(button) {
   const item = button.closest('.portfolio-item');
@@ -135,6 +232,24 @@ document.addEventListener('DOMContentLoaded', function() {
   if (inquiryForm) {
     inquiryForm.addEventListener('submit', handleInquirySubmit);
   }
+
+  // Admin Forms
+  const adminRegisterForm = document.getElementById('adminRegisterForm');
+  if (adminRegisterForm) {
+    adminRegisterForm.addEventListener('submit', adminRegister);
+  }
+
+  const adminLoginForm = document.getElementById('adminLoginForm');
+  if (adminLoginForm) {
+    adminLoginForm.addEventListener('submit', adminLogin);
+  }
+
+  const loadInquiriesButton = document.getElementById('loadInquiriesButton');
+  if (loadInquiriesButton) {
+    loadInquiriesButton.addEventListener('click', loadInquiries);
+  }
+
+  loadAdminDashboard();
 
   // Modal click outside to close
   window.onclick = function(event) {
