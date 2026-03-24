@@ -1,0 +1,433 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;700;900&display=swap');
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #ffffff;
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --dim-text: #888888;
+  --accent-color: #00ff00; /* Neon green accent */
+  --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Pretendard', 'Montserrat', sans-serif;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, .big-text {
+  font-family: 'Bebas Neue', 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+/* Navigation */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 2rem 0;
+  mix-blend-mode: difference;
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--text-color);
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 3rem;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  transition: var(--transition);
+  opacity: 0.6;
+}
+
+.nav-menu a:hover {
+  opacity: 1;
+}
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.hero::after {
+  content: "2026";
+  position: absolute;
+  right: -5%;
+  bottom: 10%;
+  font-size: 30vw;
+  font-family: 'Bebas Neue';
+  color: rgba(255, 255, 255, 0.03);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 2rem;
+  color: var(--accent-color);
+}
+
+.hero-content h2 {
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.85;
+  margin-bottom: 2rem;
+  font-weight: 900;
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  color: var(--dim-text);
+  max-width: 600px;
+  margin-bottom: 3rem;
+  font-weight: 400;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 2rem;
+}
+
+.cta-button {
+  background: var(--text-color);
+  color: var(--bg-color);
+  border: none;
+  padding: 1.2rem 3rem;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cta-button.secondary {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-button:hover {
+  background: var(--accent-color);
+  color: var(--bg-color);
+  transform: scale(1.05);
+}
+
+/* Section Common */
+section {
+  padding: 10rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+section h2 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  margin-bottom: 4rem;
+  line-height: 1;
+  display: flex;
+  align-items: flex-start;
+}
+
+section h2::before {
+  content: attr(data-num);
+  font-size: 1rem;
+  font-family: 'Montserrat';
+  margin-right: 2rem;
+  margin-top: 1rem;
+  color: var(--accent-color);
+}
+
+/* About Section */
+.about {
+  background: #0a0a0a;
+  max-width: 100%;
+}
+
+.about-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.about-text p {
+  font-size: 2rem;
+  line-height: 1.4;
+  color: var(--text-color);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
+}
+
+.stat-item strong {
+  font-size: 4rem;
+  font-family: 'Bebas Neue';
+  display: block;
+}
+
+.stat-item span {
+  color: var(--dim-text);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+}
+
+/* Services Grid */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.service-card {
+  padding: 4rem 2rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+}
+
+.service-card:last-child {
+  border-right: none;
+}
+
+.service-card:hover {
+  background: #111;
+}
+
+.service-icon {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  display: block;
+}
+
+.service-card h3 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.service-card p {
+  color: var(--dim-text);
+}
+
+/* Portfolio Grid */
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.portfolio-item {
+  background: var(--bg-color);
+  aspect-ratio: 16/10;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.portfolio-content {
+  position: absolute;
+  inset: 0;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  transition: var(--transition);
+  opacity: 0;
+}
+
+.portfolio-item:hover .portfolio-content {
+  opacity: 1;
+}
+
+.portfolio-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #222;
+  background: #050505;
+  transition: var(--transition);
+}
+
+.portfolio-item:hover .portfolio-placeholder {
+  transform: scale(1.1);
+  filter: grayscale(1) brightness(0.5);
+}
+
+.preview-btn {
+  background: var(--accent-color);
+  color: #000;
+  border: none;
+  padding: 1rem 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  width: fit-content;
+}
+
+/* Inquiry Form */
+.inquiry {
+  background: #000;
+}
+
+.inquiry-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.form-group.full {
+  grid-column: span 2;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim-text);
+  margin-bottom: 1rem;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 1rem 0;
+  font-size: 1.2rem;
+  font-family: 'Pretendard';
+  transition: var(--transition);
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-bottom-color: var(--accent-color);
+}
+
+.submit-button {
+  grid-column: span 2;
+  background: var(--text-color);
+  color: #000;
+  padding: 2rem;
+  font-size: 1.5rem;
+  font-family: 'Bebas Neue';
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.submit-button:hover {
+  background: var(--accent-color);
+}
+
+/* Modal */
+.modal {
+  background-color: rgba(0, 0, 0, 0.98);
+}
+
+.modal-content {
+  background-color: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  max-width: 1200px;
+}
+
+.preview-display {
+  height: 60vh;
+  background: #050505;
+}
+
+.close-btn {
+  color: #fff;
+}
+
+/* Footer */
+.footer {
+  padding: 10rem 4rem 4rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.footer-bottom {
+  margin-top: 0;
+  border-top: none;
+}
+
+@media (max-width: 1024px) {
+  .about-container { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .inquiry-form { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: span 1; }
+  .submit-button { grid-column: span 1; }
+}
+
+@media (max-width: 768px) {
+  .hero-content h2 { font-size: 4rem; }
+  .nav-menu { display: none; }
+  section { padding: 6rem 2rem; }
+  .nav-container { padding: 0 2rem; }
+}

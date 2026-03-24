@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CatSong | AI Creator & Digital Artist</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <h1 class="logo">CATSONG</h1>
+      <ul class="nav-menu">
+        <li><a href="#home">01. Home</a></li>
+        <li><a href="#about">02. About</a></li>
+        <li><a href="#services">03. Services</a></li>
+        <li><a href="#portfolio">04. Portfolio</a></li>
+        <li><a href="#inquiry">05. Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <span class="badge">AI Creative Studio</span>
+      <h2>Imagining<br>Reality.</h2>
+      <p>최첨단 AI 기술과 감각적인 미학의 결합. <br>비즈니스의 가치를 극대화하는 혁신적인 비주얼 콘텐츠를 창조합니다.</p>
+      <div class="hero-btns">
+        <button class="cta-button" onclick="smoothScroll('portfolio')">View Works</button>
+        <button class="cta-button secondary" onclick="smoothScroll('inquiry')">Start Project</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <h2 data-num="02">Creative<br>Intelligence</h2>
+    <div class="about-container">
+      <div class="about-text">
+        <p>기술은 도구일 뿐, 핵심은 영감입니다. <br>CatSong은 AI의 무한한 가능성을 예술적 감각으로 길들여, 세상에 없던 독창적인 스토리텔링을 구현합니다.</p>
+      </div>
+      <div class="stats">
+        <div class="stat-item"><strong>100+</strong><span>AI Projects</span></div>
+        <div class="stat-item"><strong>99%</strong><span>Success Rate</span></div>
+        <div class="stat-item"><strong>24/7</strong><span>Innovation</span></div>
+        <div class="stat-item"><strong>AI</strong><span>Powered</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="services">
+    <h2 data-num="03">Expertise</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">01</span>
+        <h3>AI Visual Art</h3>
+        <p>브랜드 고유의 철학을 담은 초고화질 AI 이미지와 아트워크를 설계합니다.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">02</span>
+        <h3>AI Cinematic</h3>
+        <p>복잡한 촬영 없이도 몰입감 넘치는 홍보 영상과 숏폼 콘텐츠를 제작합니다.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">03</span>
+        <h3>AI Branding</h3>
+        <p>로고부터 아이덴티티까지, AI를 활용해 미래지향적인 브랜드 경험을 디자인합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Section -->
+  <section id="portfolio" class="portfolio">
+    <h2 data-num="04">Selected<br>Works</h2>
+    <div class="portfolio-grid">
+      <div class="portfolio-item" data-type="video" data-title="Neon Future" data-desc="AI 영상 기술을 활용한 사이버펑크 스타일 광고">
+        <div class="portfolio-placeholder">CATSONG_01</div>
+        <div class="portfolio-content">
+          <h4>Neon Future</h4>
+          <p>Cinematic AI Video</p>
+          <button class="preview-btn" onclick="openPreview(this)">Preview</button>
+        </div>
+      </div>
+      <div class="portfolio-item" data-type="image" data-title="Nature Harmony" data-desc="초현실주의 기법의 환경 보호 캠페인 이미지">
+        <div class="portfolio-placeholder">CATSONG_02</div>
+        <div class="portfolio-content">
+          <h4>Nature Harmony</h4>
+          <p>AI Visual Artwork</p>
+          <button class="preview-btn" onclick="openPreview(this)">Preview</button>
+        </div>
+      </div>
+      <div class="portfolio-item" data-type="design" data-title="Tech Logics" data-desc="미래지향적인 기업 로고 및 아이덴티티 구축">
+        <div class="portfolio-placeholder">CATSONG_03</div>
+        <div class="portfolio-content">
+          <h4>Tech Logics</h4>
+          <p>AI Brand Design</p>
+          <button class="preview-btn" onclick="openPreview(this)">Preview</button>
+        </div>
+      </div>
+      <div class="portfolio-item" data-type="art" data-title="Dreamscape" data-desc="상상력을 현실로 만드는 독창적인 AI 아트웍">
+        <div class="portfolio-placeholder">CATSONG_04</div>
+        <div class="portfolio-content">
+          <h4>Dreamscape</h4>
+          <p>Creative AI Art</p>
+          <button class="preview-btn" onclick="openPreview(this)">Preview</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Inquiry Section -->
+  <section id="inquiry" class="inquiry">
+    <h2 data-num="05">Let's Create<br>Together</h2>
+    <div class="inquiry-container">
+      <form id="inquiryForm" class="inquiry-form">
+        <div class="form-group">
+          <label for="name">Name / Company</label>
+          <input type="text" id="name" name="name" required placeholder="Who are you?">
+        </div>
+        <div class="form-group">
+          <label for="contact">Contact / Email</label>
+          <input type="text" id="contact" name="contact" required placeholder="Where can we reach you?">
+        </div>
+        <div class="form-group full">
+          <label for="serviceType">Project Type</label>
+          <select id="serviceType" name="serviceType" required>
+            <option value="">Choose Service</option>
+            <option value="collaboration">Collaboration</option>
+            <option value="commission">Commission</option>
+            <option value="consulting">AI Consulting</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Tell us about your vision"></textarea>
+        </div>
+        <button type="submit" class="submit-button">Send Inquiry</button>
+      </form>
+      <div id="inquiryResult" class="inquiry-result" style="display:none; padding: 4rem; text-align: center;">
+        <h3 style="font-size: 3rem; margin-bottom: 1rem;">SUCCESS!</h3>
+        <p style="color: var(--accent-color);">상상이 곧 현실이 됩니다. 곧 연락드리겠습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Preview Modal -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closePreview()">&times;</span>
+      <div id="previewContent" class="preview-display"></div>
+      <div class="preview-info">
+        <h3 id="previewTitle"></h3>
+        <p id="previewDescription" style="color: var(--dim-text); margin-top: 1rem;"></p>
+        <p id="aiComment" style="color: var(--accent-color); margin-top: 1.5rem; font-style: italic;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-info">
+        <h3 style="font-size: 4rem;">CATSONG</h3>
+        <p style="color: var(--dim-text);">AI Creative Partner for your Vision</p>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 CATSONG. ALL RIGHTS RESERVED.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

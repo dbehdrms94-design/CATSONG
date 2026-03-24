@@ -1,20 +1,68 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const dotenv = require('dotenv');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Initialize Gemini API
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from root since we moved them out of /public
-app.use(express.static(__dirname));
+// Serve static files from /public
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// --- API Routes ---
+
+// AI Content Generation Route (Simulated or Real)
+app.post('/api/generate-content', async (req, res) => {
+  try {
+    const { contentType, prompt } = req.body;
+
+    if (!prompt) {
+      return res.status(400).json({ success: false, error: 'Prompt is required' });
+    }
+
+    console.log(`Generating preview for ${contentType}: "${prompt}"`);
+
+    // Using Gemini to generate a descriptive response for the preview
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(`As an AI creative director, describe a high-end ${contentType} based on this prompt: "${prompt}". Keep it professional and inspiring (max 2 sentences).`);
+    const response = await result.response;
+    const text = response.text();
+
+    // In a real app with Image/Video generation APIs (like DALL-E or stable diffusion), 
+    // you would get an actual URL here. For this demo, we use a placeholder with the AI description.
+    let previewUrl = '';
+    if (contentType === 'image') {
+      previewUrl = `https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1000`; // Abstract AI-ish image
+    } else if (contentType === 'video') {
+      previewUrl = 'video-placeholder';
+    } else {
+      previewUrl = 'model-placeholder';
+    }
+
+    res.json({
+      success: true,
+      contentType,
+      prompt,
+      description: text,
+      previewUrl,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('AI Generation Error:', error);
+    res.status(500).json({ success: false, error: 'AI generation failed' });
+  }
 });
 
 // Inquiry API Route
@@ -46,9 +94,9 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running', mode: 'Creative Studio' });
 });
 
-// 404 handling
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+// Serve index.html for all other routes (SPA style if needed)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Error handling
